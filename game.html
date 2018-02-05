@@ -50,9 +50,11 @@
 <div id="my-signin2"></div>
 <script>
     function onSuccess(googleUser) {
+        alert("success");
         console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
     }
     function onFailure(error) {
+        alert("error");
         console.log(error);
     }
     function renderButton() {
