@@ -1,144 +1,148 @@
-var game = [
-    2,
-    8,
-    6,
-    7,
-    1,
-    4,
-    3,
-    5,
-    0
-];
-var pos = [-1, 1, 0, 0];
+gameApp.controller('gameController', function ($scope, $window) {
 
-var size = 3;
-var time = 0;
 
-testingAPI();
+    $scope.username = $window.localStorage.getItem('username');
 
-var data ={};
-var interval;
-function testingAPI() {
-    var key = "Maninder";
-    var response = httpGet("http://localhost:8080/game/new", key);
-    //game = response.game;
-    data = JSON.parse(response);
-    game = data.game;
-    document.getElementById("game").innerHTML = JSON.stringify(data.game);
-    assign();
-    interval=setInterval(tickTock, 100);
-}
-function tickTock()
-{
-    time  = time+1;
-    document.getElementById("time").innerHTML = time+'';
-}
+    $scope.game = [
+        2,
+        8,
+        6,
+        7,
+        1,
+        4,
+        3,
+        5,
+        0
+    ];
+    var pos = [-1, 1, 0, 0];
 
-function httpGet(theUrl, key) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", theUrl, false); // false for synchronous request
-    xmlHttp.setRequestHeader("username", key);
-    xmlHttp.send(null);
-    return xmlHttp.responseText;
-}
+    var size = 3;
+    $scope.time = 0;
+
+    var data = {};
+    var interval;
+
+
+    testingAPI();
+
+    function testingAPI() {
+        var key = "Maninder";
+        var response = httpGet("http://localhost:8080/game/new", key);
+        //game = response.game;
+
+        data = JSON.parse(response);
+        $scope.game = data.game;
+        console.log("game : "+data.game);
+
+
+        assign();
+        interval = setInterval(tickTock, 100);
+    }
+
+    function tickTock() {
+        $scope.time = $scope.time + 1;
+    }
+
+    function httpGet(theUrl, key) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.setRequestHeader("username", key);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
 
 
 //game = shuffle(game);
 
-function assign() {
-    for (var i = 0; i < size * size; i++) {
-        var d = document.getElementById(i + '');
-        var num = game[i];
-        if (num > 0) {
-            d.innerHTML = num;
-        }
-        else {
-            d.innerHTML = '';
-        }
-    }
-}
-
-/*function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}*/
-var sol = [];
-
-function myFunction(id) {
-    var d = document.getElementById(id);
-    if (game[id] > 0) {
-        var emptyNeighbour = getEmptyNeighbour(id);
-        if (emptyNeighbour > -1) {
-            sol.push(id);
-            game[emptyNeighbour] = game[id];
-            document.getElementById("moves").innerHTML = sol.length;
-            document.getElementById("solution").innerHTML = sol;
-            document.getElementById(emptyNeighbour).innerHTML = game[id];
-            d.innerHTML = "";
-            game[id] = 0;
-            if(id==8)
-            {
-                if(solved())
-                {
-                    data.solution = sol;
-                    data.seconds=time;
-                    postData();
-                    clearInterval(interval);
-                }
+    function assign() {
+        console.log("in assign function");
+        for (var i = 0; i < size * size; i++) {
+            var d = angular.element(document).find(i + '');
+            var num = $scope.game[i];
+            if (num > 0) {
+                d.innerHTML = num;
+            }
+            else {
+                d.innerHTML = '';
             }
         }
     }
-}
 
-function postData()
-{
 
-}
+    var sol = [];
 
-function solved()
-{
-    for(var i =0;i<8;i++)
-    {
-        if(game[i] != (i+1))
+    $scope.slide = function (id) {
+        console.log("in slide");
+        var d = angular.element(document).find(id);
+        if ($scope.game[id] > 0) {
+            var emptyNeighbour = getEmptyNeighbour(id);
+            if (emptyNeighbour > -1) {
+                sol.push(id);
+                $scope.game[emptyNeighbour] = $scope.game[id];
+               /* angular.element(document).find("moves").innerHTML = sol.length;
+                angular.element(document).find("solution").innerHTML = sol;
+                angular.element(document).find(emptyNeighbour).innerHTML = game[id];*/
+                d.innerHTML = "";
+                $scope.game[id] = 0;
+                if (id == 8) {
+                    if (solved()) {
+                        data.solution = sol;
+                        data.seconds = time;
+                        postData();
+                        clearInterval(interval);
+                    }
+                }
+            }
+        }
+        function getEmptyNeighbour(id) {
+            var x = id % size;
+            var y = Math.floor(id / size);
+            for (var i = 0, j = 3; i < 4; i++, j--) {
+                var emptyNeighbour = getIfEmpty(x + pos[i], y + pos[j]);
+                if (emptyNeighbour > -1) {
+                    return emptyNeighbour;
+                }
+            }
+            return -1;
+        }
+
+        function getIfEmpty(x, y) {
+            if (x >= 0 && x <= size && y >= 0 && y <= size) {
+                var neighbourId = y * size + x;
+                if ($scope.game[neighbourId] == 0) {
+                    return neighbourId;
+                }
+            }
+            return -1;
+        }
+
+        function solved() {
+            for (var i = 0; i < 8; i++) {
+                if ($scope.game[i] != (i + 1)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function postData()
         {
-            return false;
+            alert("SOLVED");
         }
-    }
-    return true;
-}
+    };
 
-function getEmptyNeighbour(id) {
-    var x = id % size;
-    var y = Math.floor(id / size);
-    for (var i = 0, j = 3; i < 4; i++, j--) {
-        var emptyNeighbour = getIfEmpty(x + pos[i], y + pos[j]);
-        if (emptyNeighbour > -1) {
-            return emptyNeighbour;
-        }
-    }
-    return -1;
-}
 
-function getIfEmpty(x, y) {
-    if (x >= 0 && x <= size && y >= 0 && y <= size) {
-        var neighbourId = y * size + x;
-        if (game[neighbourId] == 0) {
-            return neighbourId;
-        }
-    }
-    return -1;
-}
+
+
+
+
+
+
+});
+
+
+
+
+
+
+

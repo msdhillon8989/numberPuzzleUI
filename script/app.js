@@ -1,15 +1,20 @@
-function onSignIn(googleUser) {
-    alert("got response");
-    var profile = googleUser.getBasicProfile();
+// create the module and name it scotchApp
+var gameApp = angular.module('gameApp', ['ngRoute']);
 
-    console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-    console.log('Full Name: ' + profile.getName());
-    console.log('Given Name: ' + profile.getGivenName());
-    console.log('Family Name: ' + profile.getFamilyName());
-    console.log("Image URL: " + profile.getImageUrl());
-    console.log("Email: " + profile.getEmail());
+// configure our routes
+gameApp.config(function($routeProvider) {
+    $routeProvider
 
-    // The ID token you need to pass to your backend:
-    var id_token = googleUser.getAuthResponse().id_token;
-    console.log("ID Token: " + id_token);
-}
+    // route for the home page
+        .when('/', {
+            templateUrl : 'pages/login.html',
+            controller  : 'mainController'
+        })
+
+        // route for the about page
+        .when('/game', {
+            templateUrl : 'pages/app.html',
+            controller  : 'gameController'
+        })
+       ;
+});
