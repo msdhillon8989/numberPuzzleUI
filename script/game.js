@@ -59,6 +59,7 @@ gameApp.controller('gameController', function ($scope, $window) {
         for (var i = 0; i < size * size; i++) {
             var d = angular.element(document).find(i + '');
             var num = $scope.game[i];
+
             if (num > 0) {
                 d.innerHTML = num;
             }
