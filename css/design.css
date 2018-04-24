@@ -26,3 +26,22 @@
     border: 1px solid #4cae4c;
     border-radius: 4px;
 }
+
+.empty-box{
+    color: #fff;
+    background-color: #ffffdd;
+    float: left;
+    width: 32.5%;
+    height: 32.5%;
+
+    margin-bottom: 2px;
+    margin-left: 2px;
+    font-size: 14px;
+//font-weight: 400;
+
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid #4cae4c;
+    border-radius: 4px;
+}
