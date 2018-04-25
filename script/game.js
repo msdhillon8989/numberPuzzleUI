@@ -134,6 +134,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http) 
 
         function postData()
         {
+            console.log(JSON.stringify(data));
             var post = $http({
                 method: "POST",
                 url: "https://puzzzle-api.herokuapp.com/game/solution",
