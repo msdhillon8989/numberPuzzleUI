@@ -26,8 +26,8 @@ gameApp.controller('gameController', function ($scope, $window) {
     testingAPI();
 
     function testingAPI() {
-        var key = "Maninder";
-        var response = httpGet("http://localhost:8080/game/new", key);
+        
+        var response = httpGet("https://puzzzle-api.herokuapp.com/game/new", $scope.username);
         //game = response.game;
 
         data = JSON.parse(response);
