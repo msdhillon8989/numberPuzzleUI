@@ -1,4 +1,4 @@
-gameApp.controller('gameController', function ($scope, $window) {
+gameApp.controller('gameController', function ($scope, $window,$interval,$http) {
 
 
     $scope.username = $window.localStorage.getItem('username');
@@ -26,7 +26,7 @@ gameApp.controller('gameController', function ($scope, $window) {
     testingAPI();
 
     function testingAPI() {
-        
+
         var response = httpGet("https://puzzzle-api.herokuapp.com/game/new", $scope.username);
         //game = response.game;
 
@@ -35,12 +35,15 @@ gameApp.controller('gameController', function ($scope, $window) {
         console.log("game : "+data.game);
 
 
-        assign();
-        interval = setInterval(tickTock, 100);
+       //assign();
+        interval= $interval(function(){
+            $scope.time = $scope.time + 1;
+        },100);
+        //interval = setInterval(tickTock, 100);
     }
 
     function tickTock() {
-        $scope.time = $scope.time + 1;
+
     }
 
     function httpGet(theUrl, key) {
@@ -70,27 +73,30 @@ gameApp.controller('gameController', function ($scope, $window) {
     }
 
 
-    var sol = [];
+    $scope.sol = [];
+
 
     $scope.slide = function (id) {
         console.log("in slide");
-        var d = angular.element(document).find(id);
+        //var d = angular.element(document).find(id);
+        //alert(d.innerHTML);
         if ($scope.game[id] > 0) {
             var emptyNeighbour = getEmptyNeighbour(id);
             if (emptyNeighbour > -1) {
-                sol.push(id);
+                $scope.sol.push(id);
+
                 $scope.game[emptyNeighbour] = $scope.game[id];
                /* angular.element(document).find("moves").innerHTML = sol.length;
                 angular.element(document).find("solution").innerHTML = sol;
                 angular.element(document).find(emptyNeighbour).innerHTML = game[id];*/
-                d.innerHTML = "";
+               // d.innerHTML = "";
                 $scope.game[id] = 0;
                 if (id == 8) {
                     if (solved()) {
-                        data.solution = sol;
-                        data.seconds = time;
+                        data.solution = $scope.sol;
+                        data.seconds = $scope.time;
                         postData();
-                        clearInterval(interval);
+                        $interval.cancel(interval);
                     }
                 }
             }
@@ -128,7 +134,21 @@ gameApp.controller('gameController', function ($scope, $window) {
 
         function postData()
         {
-            alert("SOLVED");
+            var post = $http({
+                method: "POST",
+                url: "https://puzzzle-api.herokuapp.com/game/solution",
+                dataType: 'json',
+                data: data,
+                headers: { "Content-Type": "application/json" }
+            });
+
+            post.success(function (data, status) {
+                $window.alert("Hello: " + JSON.stringify(data) );
+            });
+
+            post.error(function (data, status) {
+                $window.alert(data.Message);
+            });
         }
     };
 
