@@ -1,7 +1,11 @@
-gameApp.controller('gameController', function ($scope, $window,$interval,$http) {
+gameApp.controller('gameController', function ($scope, $window,$interval,$http,$location) {
 
+    var realServer = "https://puzzzle-api.herokuapp.com/game";
+    var localServer = "http://localhost:8080/game";
+    var server = realServer;
 
     $scope.username = $window.localStorage.getItem('username');
+    console.log("usenrmae  "+$scope.username);
 
     $scope.game = [
         2,
@@ -14,6 +18,9 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http) 
         5,
         0
     ];
+
+    $scope.scoreBoard ={};
+
     var pos = [-1, 1, 0, 0];
 
     var size = 3;
@@ -22,29 +29,49 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http) 
     var data = {};
     var interval;
 
+    if($scope.username === null)
+    {
+        $location.path('/');
+    }
+    else{
+        getNewGame();
+        getScoreBoard();
+    }
 
-    testingAPI();
 
-    function testingAPI() {
 
-        var response = httpGet("https://puzzzle-api.herokuapp.com/game/new", $scope.username);
+
+
+
+
+    function getNewGame() {
+
+        var response = httpGet(server+"/new", $scope.username);
         //game = response.game;
 
         data = JSON.parse(response);
-        $scope.game = data.game;
-        console.log("game : "+data.game);
+        $scope.game = Object.assign({}, data.game);
+        console.log("game : "+response);
 
 
-       //assign();
+        //assign();
         interval= $interval(function(){
             $scope.time = $scope.time + 1;
         },100);
-        //interval = setInterval(tickTock, 100);
-    }
-
-    function tickTock() {
 
     }
+
+    function getScoreBoard() {
+
+        var resp = httpGet(server+"/leaderboard", $scope.username);
+        //game = response.game;
+
+        $scope.scoreBoard = JSON.parse(resp);
+
+        console.log("leaderboard  : "+resp);
+    }
+
+
 
     function httpGet(theUrl, key) {
         var xmlHttp = new XMLHttpRequest();
@@ -137,7 +164,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http) 
             console.log(JSON.stringify(data));
             var post = $http({
                 method: "POST",
-                url: "https://puzzzle-api.herokuapp.com/game/solution",
+                url: server+"/solved",
                 dataType: 'json',
                 data: data,
                 headers: { "Content-Type": "application/json" }
@@ -153,7 +180,12 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http) 
         }
     };
 
-
+    $scope.logout = function()
+    {
+        $window.localStorage.removeItem('username');
+        //create a message to display in our view
+        $location.path('/');
+    }
 
 
 
