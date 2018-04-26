@@ -12,7 +12,7 @@
                  ng-repeat="i in [0,1,2,3,4,5,6,7,8]">
                 <h3>{{game[i] > 0 ?game[i]:''}}</h3>
             </div>
-            <div class="time-banner">
+            <div ng-hide="finished" class="time-banner">
                 <div class="col-md-6">
                     <span>Time : {{time}}</span>
                 </div>
@@ -21,10 +21,13 @@
                 </div>
 
             </div>
+            <div ng-show="finished" class="alert alert-success">
+                <strong>Success!</strong> Solved in {{time}} deciSeconds with {{sol.length}} moves.
+            </div>
+
         </div>
-
-
     </div>
+
     <div class="col-md-3">
         <table class="table table-bordered">
             <thead>
@@ -43,7 +46,7 @@
             <tbody>
             <tr ng-repeat="(key,value) in scoreBoard ">
                 <td>
-                    {{key}}
+                    <span ng-class = "{'highlight' : key === username }">{{key}}</span>
                 </td>
                 <td>
                     {{value.time}}
