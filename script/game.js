@@ -40,7 +40,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
 
     function getNewGame() {
 
-        var response = httpGet(server+"/new", $scope.username);
+        var response = httpGet(server+"/", $scope.username);
 
 
         data = JSON.parse(response);
@@ -97,7 +97,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
                     if (id == 8) {
                         if (solved()) {
                             data.solution = $scope.sol;
-                            data.seconds = $scope.time;
+                            data.timeTaken = $scope.time;
                             postData();
                             $interval.cancel(interval);
                         }
@@ -148,7 +148,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
 
                 post.success(function (data, status) {
                     $scope.finished=true;
-
+                    console.log(data);
                     getScoreBoard();
                 });
 

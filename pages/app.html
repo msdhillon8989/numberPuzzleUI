@@ -44,12 +44,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(key,value) in scoreBoard ">
+            <tr ng-repeat="value in scoreBoard ">
                 <td>
-                    <span ng-class = "{'highlight' : key === username }">{{key}}</span>
+                    <span ng-class = "{'highlight' : key === username }">{{value.username}}</span>
                 </td>
                 <td>
-                    {{value.time}}
+                    {{value.timeTaken}}
                 </td>
                 <td>
                     {{value.moves}}
