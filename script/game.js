@@ -137,6 +137,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
             }
 
             function postData() {
+                $scope.finished=true;
                 console.log(JSON.stringify(data));
                 var post = $http({
                     method: "POST",
@@ -147,7 +148,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
                 });
 
                 post.success(function (data, status) {
-                    $scope.finished=true;
+
                     console.log(data);
                     getScoreBoard();
                 });

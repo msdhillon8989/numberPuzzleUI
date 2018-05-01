@@ -46,7 +46,7 @@
             <tbody>
             <tr ng-repeat="value in scoreBoard ">
                 <td>
-                    <span ng-class = "{'highlight' : key === username }">{{value.username}}</span>
+                    <span ng-class = "{'highlight' : value.username === username }">{{value.username}}</span>
                 </td>
                 <td>
                     {{value.timeTaken}}
