@@ -1,70 +1,64 @@
-gameApp.controller('gameController', function ($scope, $window,$interval,$http,$location) {
+gameApp.controller('gameController', function ($scope, $window, $interval, $http, $location) {
 
     var realServer = "https://puzzzle-api.herokuapp.com/game";
     var localServer = "http://localhost:8080/game";
     var server = realServer;
 
     $scope.username = $window.localStorage.getItem('username');
-    console.log("usenrmae  "+$scope.username);
-    $scope.finished= false;
-    $scope.game = [
-        2,
-        8,
-        6,
-        7,
-        1,
-        4,
-        3,
-        5,
-        0
-    ];
+    console.log("usenrmae  " + $scope.username);
+    $scope.finished = false;
+    $scope.loading = true;
+    $scope.game = [];
 
-    $scope.scoreBoard ={};
-
+    $scope.scoreBoard = {};
+    $scope.range = [];
     var pos = [-1, 1, 0, 0];
 
-    var size = 3;
+    $scope.sol = [];
+    $scope.level = 3;
     $scope.time = 0;
 
     var data = {};
     var interval;
 
-    if($scope.username === null)
-    {
+    if ($scope.username === null) {
         $location.path('/');
     }
-    else{
+    else {
         getNewGame();
         getScoreBoard();
     }
 
     function getNewGame() {
-
-        var response = httpGet(server+"/", $scope.username);
-
-
+        $interval.cancel(interval);
+        $scope.time = 0;
+        $scope.sol.length = 0;
+        $scope.finished = false;
+        var response = httpGet(server + "/" + $scope.level, $scope.username);
         data = JSON.parse(response);
         $scope.game = Object.assign({}, data.game);
-        console.log("game : "+response);
+        $scope.range.length = 0;
+        for (var i = 0; i < $scope.level * $scope.level; i++) {
 
-
-
-        interval= $interval(function(){
+            $scope.range.push(i);
+        }
+        $scope.loading = false;
+        console.log("game : " + response, $scope.range);
+        interval = $interval(function () {
             $scope.time = $scope.time + 1;
-        },100);
+        }, 100);
 
     }
 
     function getScoreBoard() {
 
-        var resp = httpGet(server+"/leaderboard", $scope.username);
+        var resp = httpGet(server + "/leaderboard/" + $scope.level, $scope.username);
         //game = response.game;
 
         $scope.scoreBoard = JSON.parse(resp);
 
-        console.log("leaderboard  : "+resp);
+        console.log("leaderboard  : " + resp);
     }
-
 
 
     function httpGet(theUrl, key) {
@@ -79,13 +73,8 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
 //game = shuffle(game);
 
 
-
-
-    $scope.sol = [];
-
-
     $scope.slide = function (id) {
-        if(!$scope.finished) {
+        if (!$scope.finished) {
             if ($scope.game[id] > 0) {
                 var emptyNeighbour = getEmptyNeighbour(id);
                 if (emptyNeighbour > -1) {
@@ -94,7 +83,8 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
                     $scope.game[emptyNeighbour] = $scope.game[id];
 
                     $scope.game[id] = 0;
-                    if (id == 8) {
+
+                    if (id == ($scope.level * $scope.level - 1)) {
                         if (solved()) {
                             data.solution = $scope.sol;
                             data.timeTaken = $scope.time;
@@ -106,8 +96,8 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
             }
 
             function getEmptyNeighbour(id) {
-                var x = id % size;
-                var y = Math.floor(id / size);
+                var x = id % $scope.level;
+                var y = Math.floor(id / $scope.level);
                 for (var i = 0, j = 3; i < 4; i++, j--) {
                     var emptyNeighbour = getIfEmpty(x + pos[i], y + pos[j]);
                     if (emptyNeighbour > -1) {
@@ -118,8 +108,8 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
             }
 
             function getIfEmpty(x, y) {
-                if (x >= 0 && x <= size && y >= 0 && y <= size) {
-                    var neighbourId = y * size + x;
+                if (x >= 0 && x <= $scope.level && y >= 0 && y <= $scope.level) {
+                    var neighbourId = y * $scope.level + x;
                     if ($scope.game[neighbourId] == 0) {
                         return neighbourId;
                     }
@@ -128,7 +118,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
             }
 
             function solved() {
-                for (var i = 0; i < 8; i++) {
+                for (var i = 0; i < $scope.level * $scope.level - 1; i++) {
                     if ($scope.game[i] != (i + 1)) {
                         return false;
                     }
@@ -137,7 +127,7 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
             }
 
             function postData() {
-                $scope.finished=true;
+                $scope.finished = true;
                 console.log(JSON.stringify(data));
                 var post = $http({
                     method: "POST",
@@ -158,22 +148,29 @@ gameApp.controller('gameController', function ($scope, $window,$interval,$http,$
                 });
             }
         }
-        else{
+        else {
             $window.alert("Already solved");
         }
     };
 
-    $scope.logout = function()
-    {
+
+    $scope.updatelevel = function (l) {
+        console.log("sasdasd" + l);
+
+        $scope.loading = true;
+        $scope.level = l;
+        getNewGame();
+        getScoreBoard();
+
+    };
+
+    $scope.logout = function () {
+        console.log("sasdasd logout");
         $window.localStorage.removeItem('username');
         //create a message to display in our view
         $location.path('/');
-    }
 
-
-
-
-
+    };
 
 });
 
