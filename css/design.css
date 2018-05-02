@@ -1,40 +1,93 @@
 
 .banner{
     width: 100%;
-    height: 50px;
+    height: 80px;
     margin-top: 0;
     background-color: #343434  ;
     padding: 10px;
     color: white;
 
 }
-
-.gamebox
-{
-    width: 450px;
-    height: 450px;
-    margin-left: auto;
-    margin-right: auto;
+.levels{
+    width: 100%;
+    margin-bottom: 1px;
+    margin-top: 1px;
 
 }
 
+.link{
+    color: #999;
+    position: relative;
+    display: block;
+
+    padding: 15px 15px;
+    text-decoration: none;
+    line-height: 20px;
+}
+
+.level{
+    float: left;
+    width: 33.3%;
+
+}
+.level-content
+{
+
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    padding: 15px 32px;
+    font-weight: bold;
+    margin: 2px;
+}
+
+.gamebox
+{
+    width: 500px;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .box{
     color: #fff;
     background-color: #4469fc;
-    float: left;
-    width: 33.3%;
-    height: 33.3%;
-
-   border: 1px solid white;
+    border: 1px solid white;
     font-size: 14px;
-    //font-weight: 400;
-
+    width: 100%;
+    height: 100%;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
+}
 
+.empty-box{
+    color: #fff;
+    background-color: #efefef;
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
 
+.level3{
+    float: left;
+    width: 33.3%;
+    height: 33.3%;
+}
+.level4{
+    float: left;
+    width: 25%;
+    height: 25%;
+}
+
+.level5{
+    float: left;
+    width: 20%;
+    height: 20%;
 }
 
 .time-banner{
@@ -89,14 +142,4 @@
 
 
 
-.empty-box{
-    color: #fff;
-    background-color: #efefef;
-    float: left;
-    width: 33.3%;
-    height: 33.3%;
-    border: 1px solid white;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-}
+

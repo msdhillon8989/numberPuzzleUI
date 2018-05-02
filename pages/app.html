@@ -1,31 +1,67 @@
-<div class="banner">
-    <div class="col-sm-4 col-sm-offset-8">
+<!--<div class="banner">
+    <div class="col-md-6">
+        <div class="levels">
+            <div class="level"><div class="level-content">3 x 3</div></div>
+            <div class="level"><div class="level-content">4 x 4</div></div>
+            <div class="level"><div class="level-content">5 x 5</div></div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-2">
         <div class="col-sm-6" id="username" ng-bind="username"></div>
         <div class="col-sm-6 logout" id="logout" ng-click="logout()">Logout</div>
     </div>
-</div>
+</div>-->
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="navbar-brand" >{{username}}</span>
+        </div>
+        <ul class="nav navbar-nav">
+
+            <li  ng-class="{'active' : level === 3}"><a  ng-click="updatelevel(3)">3 x 3</a></li>
+            <li  ng-class="{'active' : level === 4}"><a  ng-click="updatelevel(4)">4 x 4</a></li>
+            <li  ng-class="{'active' : level === 5}"><a  ng-click="updatelevel(5)">5 x 5</a></li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a  ng-click="logout()">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
 <div class="container">
     <div class="col-md-offset-3 col-md-6">
-        <div class="gamebox">
 
-            <div id="{{i}}" ng-click="slide(i)" ng-class="{'box' : game[i]>0 , 'empty-box' : game[i]==0}"
-                 ng-repeat="i in [0,1,2,3,4,5,6,7,8]">
-                <h3>{{game[i] > 0 ?game[i]:''}}</h3>
+        <div>
+            <div ng-show="loading" class="alert alert-success">
+                <strong>Wait!!</strong> Loading game.
             </div>
-            <div ng-hide="finished" class="time-banner">
-                <div class="col-md-6">
-                    <span>Time : {{time}}</span>
-                </div>
-                <div class="col-md-6">
-                    <span>Moves : {{sol.length}}</span>
-                </div>
+        </div>
 
+        <div ng-hide="loading" class="gamebox">
+
+            <div ng-click="slide(i)"
+                 ng-repeat="i in range"  ng-class="{'level3' : level === 3 , 'level4' : level === 4,'level5' : level === 5}">
+                <div id="{{i}}" ng-class="{'box' : game[i]>0 , 'empty-box' : game[i]==0}">
+                    <h3>{{game[i] > 0 ?game[i]:''}}</h3>
+                </div>
             </div>
-            <div ng-show="finished" class="alert alert-success">
-                <strong>Success!</strong> Solved in {{time}} deciSeconds with {{sol.length}} moves.
+        </div>
+        <div ng-hide="finished" class="time-banner">
+            <div class="col-md-6">
+                <span>Time : {{time}}</span>
+            </div>
+            <div class="col-md-6">
+                <span>Moves : {{sol.length}}</span>
             </div>
 
         </div>
+        <div ng-show="finished" class="alert alert-success">
+            <strong>Success!</strong> Solved in {{time}} deciSeconds with {{sol.length}} moves.
+        </div>
+
+
     </div>
 
     <div class="col-md-3">
@@ -46,7 +82,7 @@
             <tbody>
             <tr ng-repeat="value in scoreBoard ">
                 <td>
-                    <span ng-class = "{'highlight' : value.username === username }">{{value.username}}</span>
+                    <span ng-class="{'highlight' : value.username === username }">{{value.username}}</span>
                 </td>
                 <td>
                     {{value.timeTaken}}
