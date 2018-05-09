@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div ng-hide="finished" class="time-banner">
+        <div ng-hide="finished || loading" class="time-banner">
             <div class="col-md-6">
                 <span>Time : {{time}}</span>
             </div>
@@ -64,7 +64,7 @@
 
     </div>
 
-    <div class="col-md-3">
+    <div ng-hide="loading" class="col-md-3">
         <table class="table table-bordered">
             <thead>
             <tr>

@@ -34,30 +34,54 @@ gameApp.controller('gameController', function ($scope, $window, $interval, $http
         $scope.time = 0;
         $scope.sol.length = 0;
         $scope.finished = false;
-        var response = httpGet(server + "/" + $scope.level, $scope.username);
-        data = JSON.parse(response);
-        $scope.game = Object.assign({}, data.game);
-        $scope.range.length = 0;
-        for (var i = 0; i < $scope.level * $scope.level; i++) {
 
-            $scope.range.push(i);
-        }
-        $scope.loading = false;
-        console.log("game : " + response, $scope.range);
-        interval = $interval(function () {
-            $scope.time = $scope.time + 1;
-        }, 100);
+
+        var post = $http({
+            method: "GET",
+            url: server + "/" +$scope.level,
+            dataType: 'json',
+            headers: {"Content-Type": "application/json" , "username" : $scope.username}
+        });
+
+        post.success(function (data, status) {
+            console.log(data);
+            //data = JSON.parse(data);
+            $scope.game = Object.assign({}, data.game);
+            $scope.range.length = 0;
+            for (var i = 0; i < $scope.level * $scope.level; i++) {
+                $scope.range.push(i);
+            }
+            $scope.loading = false;
+            interval = $interval(function () {
+                $scope.time = $scope.time + 1;
+            }, 100);
+            getScoreBoard();
+        });
+
+        post.error(function (data, status) {
+            $window.alert(data.Message);
+        });
+
+
 
     }
 
     function getScoreBoard() {
 
-        var resp = httpGet(server + "/leaderboard/" + $scope.level, $scope.username);
-        //game = response.game;
+        var post = $http({
+            method: "GET",
+            url: server + "/leaderboard/" +$scope.level,
+            dataType: 'json',
+            headers: {"Content-Type": "application/json" , "username" : $scope.username}
+        });
 
-        $scope.scoreBoard = JSON.parse(resp);
+        post.success(function (data, status) {
+            $scope.scoreBoard = data;
+        });
 
-        console.log("leaderboard  : " + resp);
+        post.error(function (data, status) {
+            $window.alert(data.Message);
+        });
     }
 
 
