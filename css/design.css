@@ -143,3 +143,40 @@
 
 
 
+
+.green {
+    background: #b9f6ca; }
+
+.blue {
+    background: #84ffff; }
+
+.red {
+    background: #FF0000; }
+
+.gray {
+    background: #eeeeee; }
+
+
+.background-image-mines {
+
+    background-image: url('../res/mines.PNG');
+    background-size:100%;
+    background-repeat: no-repeat;
+    -webkit-filter: blur(1px);
+    -moz-filter: blur(1px);
+    -o-filter: blur(1px);
+    -ms-filter: blur(1px);
+    filter: blur(1px);
+}
+
+.background-image-slide {
+
+    background-image: url('../res/slide.PNG');
+    background-size:100%;
+    background-repeat: no-repeat;
+    -webkit-filter: blur(1px);
+    -moz-filter: blur(1px);
+    -o-filter: blur(1px);
+    -ms-filter: blur(1px);
+    filter: blur(1px);
+}

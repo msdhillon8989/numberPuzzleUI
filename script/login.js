@@ -3,14 +3,14 @@ gameApp.controller('mainController', function ($scope, $location, $window) {
 
     var username = $window.localStorage.getItem('username');
     if (username) {
-        $location.path('/game');
+        $location.path('/dashboard');
     }
 
     $scope.play = function () {
 
         $window.localStorage.setItem('username', $scope.username)
         //create a message to display in our view
-        $location.path('/game');
+        $location.path('/dashboard');
 
     }
 });

@@ -29,73 +29,68 @@ gameApp.controller('gameController', function ($scope, $window, $interval, $http
         getScoreBoard();
     }
 
+    var assignGame = function (response) {
+        data = response.data;
+        console.log(data);
+        //data = JSON.parse(data);
+        $scope.game = Object.assign({}, data.game);
+        $scope.range.length = 0;
+        for (var i = 0; i < $scope.level * $scope.level; i++) {
+            $scope.range.push(i);
+        }
+        $scope.loading = false;
+        interval = $interval(function () {
+            $scope.time = $scope.time + 1;
+        }, 100);
+        getScoreBoard();
+    };
+
+    var warning = function (response) {
+        $window.alert(response.data.message);
+    };
+
     function getNewGame() {
         $interval.cancel(interval);
         $scope.time = 0;
         $scope.sol.length = 0;
         $scope.finished = false;
 
-
-        var post = $http({
-            method: "GET",
-            url: server + "/" +$scope.level,
-            dataType: 'json',
-            headers: {"Content-Type": "application/json" , "username" : $scope.username}
+        httpRequest("GET", server + "/" + $scope.level, "", function (response) {
+            assignGame(response)
+        }, function (response) {
+            warning(response)
         });
-
-        post.success(function (data, status) {
-            console.log(data);
-            //data = JSON.parse(data);
-            $scope.game = Object.assign({}, data.game);
-            $scope.range.length = 0;
-            for (var i = 0; i < $scope.level * $scope.level; i++) {
-                $scope.range.push(i);
-            }
-            $scope.loading = false;
-            interval = $interval(function () {
-                $scope.time = $scope.time + 1;
-            }, 100);
-            getScoreBoard();
-        });
-
-        post.error(function (data, status) {
-            $window.alert(data.Message);
-        });
-
-
-
     }
+
+
+    function httpRequest(method, url, data, successMethod, failedMethod) {
+        var httpRequest = $http({
+            method: method,
+            url: url,
+            data: data,
+            dataType: 'json',
+            headers: {"Content-Type": "application/json", "username": $scope.username}
+        });
+
+        httpRequest.then(function onSuccess(response) {
+            successMethod(response);
+        });
+
+        httpRequest.catch(function onError(response) {
+            failedMethod(response)
+        });
+    }
+
 
     function getScoreBoard() {
 
-        var post = $http({
-            method: "GET",
-            url: server + "/leaderboard/" +$scope.level,
-            dataType: 'json',
-            headers: {"Content-Type": "application/json" , "username" : $scope.username}
+        httpRequest("GET", server + "/leaderboard/" + $scope.level, "", function (response) {
+            $scope.scoreBoard = response.data
+        }, function (response) {
+            warning(response)
         });
 
-        post.success(function (data, status) {
-            $scope.scoreBoard = data;
-        });
-
-        post.error(function (data, status) {
-            $window.alert(data.Message);
-        });
     }
-
-
-    function httpGet(theUrl, key) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", theUrl, false); // false for synchronous request
-        xmlHttp.setRequestHeader("username", key);
-        xmlHttp.send(null);
-        return xmlHttp.responseText;
-    }
-
-
-//game = shuffle(game);
-
 
     $scope.slide = function (id) {
         if (!$scope.finished) {
@@ -153,23 +148,13 @@ gameApp.controller('gameController', function ($scope, $window, $interval, $http
             function postData() {
                 $scope.finished = true;
                 console.log(JSON.stringify(data));
-                var post = $http({
-                    method: "POST",
-                    url: server + "/solved",
-                    dataType: 'json',
-                    data: data,
-                    headers: {"Content-Type": "application/json"}
-                });
-
-                post.success(function (data, status) {
-
-                    console.log(data);
+                httpRequest("POST", server + "/solved", data, function (response) {
+                    console.log(response.data);
                     getScoreBoard();
+                }, function (response) {
+                    warning(response)
                 });
 
-                post.error(function (data, status) {
-                    $window.alert(data.Message);
-                });
             }
         }
         else {
@@ -191,8 +176,7 @@ gameApp.controller('gameController', function ($scope, $window, $interval, $http
     $scope.logout = function () {
         console.log("sasdasd logout");
         $window.localStorage.removeItem('username');
-        //create a message to display in our view
-        $location.path('/');
+              $location.path('/');
 
     };
 

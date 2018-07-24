@@ -1,0 +1,11 @@
+.dialog-header{
+    padding: 0 15px;
+    width: 100%;
+    background-color: #4469fc;
+}
+
+
+.dialog-content {
+    padding: 0 15px;
+    width: 100%;
+}

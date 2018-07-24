@@ -1,0 +1,33 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="navbar-brand" >{{username}}</span>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a  ng-click="logout()">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+    <div
+          flex-offset="5" flex="90"
+          flex-offset-sm="10" flex-sm="80"
+          flex-offset-gt-sm="25" flex-gt-sm="50"
+          flex-offset-gt-md="25" flex-gt-md="50"  >
+        <md-grid-list
+                md-cols="2"
+                md-row-height="1:1"
+                md-gutter="20px">
+
+            <!--ng-class="{'green' : i % 2 == 1 ,'blue' : i % 2 == 0 }"-->
+            <md-grid-tile ng-click='gotoPage("game")' class ='background-image-slide'>
+
+            </md-grid-tile>
+
+            <md-grid-tile ng-click='gotoPage("mines")' class ='background-image-mines'>
+
+            </md-grid-tile>
+
+        </md-grid-list>
+    </div>
+
