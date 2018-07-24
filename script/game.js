@@ -1,7 +1,7 @@
 gameApp.controller('gameController', function ($scope, $window, $interval, $http, $location) {
 
-    var realServer = "https://puzzzle-api.herokuapp.com/game";
-    var localServer = "http://localhost:8080/game";
+    var realServer = "https://puzzzle-api.herokuapp.com/slide";
+    var localServer = "http://localhost:8080/slide";
     var server = realServer;
 
     $scope.username = $window.localStorage.getItem('username');
