@@ -1,23 +1,25 @@
-gameApp.controller('minesController', function ($scope, $window, $interval, $http, $location, $mdDialog) {
+gameApp.controller('sudokuController', function ($scope, $window, $interval, $http, $location, $mdDialog) {
 
-    $scope.level = 20;
+    $scope.level = 9;
     $scope.range = [];
-    var segment = 1;
+    $scope.buttons = [];
+    for (var i = 0; i < 10; i++) {
+        $scope.buttons.push(i);
+    }
+    var segment = 3;
 
     var realServer = "https://puzzzle-api.herokuapp.com/mines";
-    var localServer = "http://localhost:8080/mines";
+    var localServer = "http://localhost:8080/sudoku";
     var server = realServer;
     $scope.username = $window.localStorage.getItem('username');
 
 
-    $scope.game = {};
     $scope.object = {};
     $scope.object.game = {};
     $scope.gameOver = false;
-    $scope.totalButton = 400;
     $scope.loading = true;
     var data = {};
-    var token = 2568;
+
     var interval;
     getScoreBoard();
     getNewGame();
@@ -26,35 +28,24 @@ gameApp.controller('minesController', function ($scope, $window, $interval, $htt
     var assignGame = function (response) {
         data = response.data;
         console.log(data);
-        //data = JSON.parse(data);
-        //$scope.game = Object.assign({}, data.game);
         $scope.range.length = 0;
-        token = 0;
+
         for (var i = 0; i < $scope.level * $scope.level; i++) {
             $scope.range.push(i);
-            token += i;
-            var jsonObject = {};
+
             var button = {};
             button.value = data.game[i];
             button.clicked = false;
-            button.label = button.value;
+            button.class = $scope.getSegmentClass(i);
+            $scope.object.game[i] = button;
             if (button.value > 0) {
-                button.class = 'blue';
-            }
-            else if (button.value < 0) {
-                button.label = "X";
-                button.class = 'red';
+                button.locked = true;
             }
             else {
-                button.class = 'gray';
-                button.label = '';
+                button.locked = false;
             }
-
-            jsonObject[i] = button;
-            $scope.object.game[i] = button;
-            // changeButton(button);
-
         }
+        console.log($scope.object);
         $scope.loading = false;
         interval = $interval(function () {
             $scope.time = $scope.time + 1;
@@ -111,7 +102,7 @@ gameApp.controller('minesController', function ($scope, $window, $interval, $htt
 
         $mdDialog.show(
             $mdDialog.alert()
-                .parent(angular.element(document.querySelector('#minesGamePanel')))
+                .parent(angular.element(document.querySelector('#sudokuGrid')))
                 .clickOutsideToClose(true)
                 .title(data.title)
                 .textContent(data.content)
@@ -155,51 +146,16 @@ gameApp.controller('minesController', function ($scope, $window, $interval, $htt
     }
 
 
-    function explore(num) {
-        var x = num / $scope.level | 0;
-        var y = num % $scope.level | 0;
-        console.log("khali button " + x + " " + y);
+    $scope.selectedButton = {};
 
-        explode(x - 1, y - 1);
-        explode(x, y - 1);
-        explode(x + 1, y - 1);
-
-        explode(x - 1, y);
-        explode(x + 1, y);
-
-        explode(x - 1, y + 1);
-        explode(x, y + 1);
-        explode(x + 1, y + 1);
+    $scope.selected = function (num) {
+        $scope.selectedButton = $scope.object.game[num];
+    };
 
 
-    }
-
-    function explode(newx, newy) {
-        console.log("kholo khali button " + newx + " " + newy)
-        if (newx >= 0 && newx < $scope.level &&
-            newy >= 0 && newy < $scope.level) {
-            $scope.openTile(newx * $scope.level + newy);
-        }
-    }
-
-    $scope.openTile = function (num) {
-        var button = $scope.object.game[num];
-
-        console.log("button pressed " + num);
-        if (!button.clicked) {
-            button.clicked = true;
-            $scope.totalButton--;
-            token -= num;
-            if ($scope.totalButton === $scope.level && $scope.gameOver === false) {
-                gameWon();
-            }
-            if (button.value < 0) {
-                gameOver();
-            }
-            if (button.value === 0) {
-                explore(num);
-            }
-        }
+    $scope.applyNumber = function (num) {
+        if (!$scope.selectedButton.locked)
+            $scope.selectedButton.value = num;
     };
 
 

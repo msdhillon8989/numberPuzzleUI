@@ -1,0 +1,70 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="navbar-brand">{{username}}</span>
+        </div>
+        <ul class="nav navbar-nav">
+
+            <li><a>Easy</a></li>
+            <li><a>Medium</a></li>
+            <li ng-class="{'active' : level === 9}"><a>Hard</a></li>
+
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a ng-click="logout()">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+<div layout="column">
+    <div flex="100" ng-show="loading">
+        <md-progress-linear md-mode="query"></md-progress-linear>
+        <div class="bottom-block">
+            <span>Loading application libraries...</span>
+        </div>
+    </div>
+    <div layout="row">
+
+        <div flex="35" flex-offset="30">
+            <div layout="column" layout-align="start">
+                <div id="sudokuGrid">
+                    <md-grid-list
+                            md-cols="{{level}}"
+                            md-row-height="1:1"
+                            md-gutter="2px">
+
+                        <md-grid-tile ng-repeat="i in range" ng-click="selected(i)" class={{object.game[i].class}}
+                                      ng-class="(object.game[i].locked ===true ? 'fixed-number': 'number')">
+                            {{object.game[i].value > 0 ? object.game[i].value : ''}}
+                        </md-grid-tile>
+
+                    </md-grid-list>
+                </div>
+                <div id="buttons">
+                    <md-grid-list
+                            md-cols="{{10}}"
+                            md-row-height="1:1"
+                            md-gutter="10px">
+
+                        <md-grid-tile ng-repeat="i in buttons" ng-click="applyNumber(i)" class="number number-button">
+                            {{i > 0 ? i : 'Clear'}}
+                        </md-grid-tile>
+
+                    </md-grid-list>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div flex>
+            Scoreboard
+        </div>
+
+
+    </div>
+
+
+</div>

@@ -162,11 +162,7 @@
     background-image: url('../res/mines.PNG');
     background-size:100%;
     background-repeat: no-repeat;
-    -webkit-filter: blur(1px);
-    -moz-filter: blur(1px);
-    -o-filter: blur(1px);
-    -ms-filter: blur(1px);
-    filter: blur(1px);
+
 }
 
 .background-image-slide {
@@ -174,9 +170,29 @@
     background-image: url('../res/slide.PNG');
     background-size:100%;
     background-repeat: no-repeat;
-    -webkit-filter: blur(1px);
-    -moz-filter: blur(1px);
-    -o-filter: blur(1px);
-    -ms-filter: blur(1px);
-    filter: blur(1px);
+
+}
+
+
+
+.fixed-number{
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: not-allowed;
+    color: #999999;
+}
+
+.number{
+    text-decoration: none;
+    font-size: 24px;
+    color: #343434;
+}
+
+.number-button{
+    background-color: rgb(71,175,200);
+}
+
+#buttons{
+    margin-top: 10px;
 }

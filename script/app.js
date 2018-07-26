@@ -14,6 +14,10 @@ gameApp.config(function($routeProvider) {
             templateUrl : 'pages/mines.html',
             controller  : 'minesController'
         })
+        .when('/sudoku', {
+            templateUrl : 'pages/sudoku.html',
+            controller  : 'sudokuController'
+        })
         .when('/', {
             templateUrl : 'pages/login.html',
             controller  : 'mainController'
