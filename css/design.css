@@ -173,7 +173,13 @@
 
 }
 
+.background-image-sudoku {
 
+    background-image: url('../res/sudoku.png');
+    background-size:100%;
+    background-repeat: no-repeat;
+
+}
 
 .fixed-number{
     text-decoration: none;

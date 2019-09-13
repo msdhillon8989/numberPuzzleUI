@@ -20,16 +20,10 @@
                 md-gutter="20px">
 
             <!--ng-class="{'green' : i % 2 == 1 ,'blue' : i % 2 == 0 }"-->
-            <md-grid-tile ng-click='gotoPage("game")' >
-
-                <div class="background-image-slide">
-
-                </div>
+            <md-grid-tile ng-click='gotoPage("game")' class="background-image-slide">
                 <md-grid-tile-footer >
                     <h3>Slide Puzzle</h3>
                 </md-grid-tile-footer>
-
-
             </md-grid-tile>
 
             <md-grid-tile ng-click='gotoPage("mines")' class ='background-image-mines'>
@@ -38,7 +32,7 @@
                 </md-grid-tile-footer>
             </md-grid-tile>
 
-            <md-grid-tile ng-click='gotoPage("sudoku")' class ='background-image-mines'>
+            <md-grid-tile ng-click='gotoPage("sudoku")' class ='background-image-sudoku'>
                 <md-grid-tile-footer>
                     <h3>Sudoku</h3>
                 </md-grid-tile-footer>
