@@ -8,7 +8,7 @@ gameApp.controller('sudokuController', function ($scope, $window, $interval, $ht
     }
     var segment = 3;
 
-    var realServer = "https://puzzzle-api.herokuapp.com/mines";
+    var realServer = "https://puzzzle-api.herokuapp.com/sudoku";
     var localServer = "http://localhost:8080/sudoku";
     var server = realServer;
     $scope.username = $window.localStorage.getItem('username');
